@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 public class StatusBar
 {
     private Composite statusbar;
-    public static Label statusbarLabel;
+    private static Label statusbarLabel;
 
     public StatusBar(Composite parent)
     {
@@ -31,5 +31,10 @@ public class StatusBar
         statusbarLabel = new Label(statusbar, SWT.CENTER);
         statusbarLabel.setLayoutData(new RowData(300, -1));
         statusbarLabel.setText("就绪");
+    }
+
+    public static void setStatusMessage(String message)
+    {
+        statusbarLabel.setText(message);
     }
 }

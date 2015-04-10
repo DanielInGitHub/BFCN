@@ -1,16 +1,11 @@
 package daniel.view;
 
 import daniel.view.bottomside.StatusBar;
-import daniel.view.leftside.FolderSelector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
-
-import java.io.File;
 
 /**
  * Created by daniel chiu on 2015/4/8.
@@ -20,8 +15,9 @@ public class MainWindow
     private static Display display = new Display();
     private static Shell shell = new Shell(display);
     private static StatusBar statusBar;
-    private static FolderSelector folderSelector;
     private static SashForm sashForm;
+    private static LeftPart leftPart;
+    private static RightPart rightPart;
 //    private static ToolBar toolBar= new ToolBar(shell);
 
 
@@ -32,7 +28,6 @@ public class MainWindow
         setLayoutData();
         //添加控件
         setWidgets();
-
 
         openWindow();
     }
@@ -63,14 +58,18 @@ public class MainWindow
     private static void setWidgets()
     {
         /**
-         * 父控件为sashForm
-         */
-        folderSelector = new FolderSelector(sashForm);
-
-        /**
-         * 父控件为shell
+         * 父控件为shell,必须先实例化状态栏，因为其他控件在实例化过程中会调用状态栏显示信息
          */
         statusBar = new StatusBar(shell);
+
+        /**
+         * 父控件为sashForm,左右占比3:7
+         */
+        leftPart = new LeftPart(sashForm);
+        rightPart = new RightPart(sashForm);
+        sashForm.setWeights(new int[]{30, 70});
+
+
     }
 
     /**

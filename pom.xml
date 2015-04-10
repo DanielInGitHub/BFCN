@@ -7,17 +7,10 @@
     <groupId>daniel.work</groupId>
     <artifactId>BFCN</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <dependencies>
 
         <!--向依赖中添加添加本地的jar包-->
-        <dependency>
-            <groupId>org.eclipse.core</groupId>
-            <artifactId>runtime</artifactId>
-            <version>3.10.0.v20140318-2214</version>
-            <scope>system</scope>
-            <systemPath>D:/lib/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar</systemPath>
-        </dependency>
-
         <dependency>
             <groupId>org.eclipse.swt</groupId>
             <artifactId>swt</artifactId>
@@ -26,21 +19,29 @@
             <systemPath>D:/lib/org.eclipse.swt.win32.win32.x86_64_3.103.2.v20150203-1351.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>org.eclipse.ui</groupId>
-            <artifactId>workbench</artifactId>
-            <version>3.106.2.v20150204-1030</version>
-            <scope>system</scope>
-            <systemPath>D:/lib/org.eclipse.ui.workbench_3.106.2.v20150204-1030.jar</systemPath>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.core</groupId>-->
+        <!--<artifactId>runtime</artifactId>-->
+        <!--<version>3.10.0.v20140318-2214</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>D:/lib/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar</systemPath>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.eclipse.jface</groupId>
-            <artifactId>jface</artifactId>
-            <version>3.10.2.v20141021-1035</version>
-            <scope>system</scope>
-            <systemPath>D:/lib/org.eclipse.jface_3.10.2.v20141021-1035.jar</systemPath>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.ui</groupId>-->
+        <!--<artifactId>workbench</artifactId>-->
+        <!--<version>3.106.2.v20150204-1030</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>D:/lib/org.eclipse.ui.workbench_3.106.2.v20150204-1030.jar</systemPath>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.jface</groupId>-->
+        <!--<artifactId>jface</artifactId>-->
+        <!--<version>3.10.2.v20141021-1035</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>D:/lib/org.eclipse.jface_3.10.2.v20141021-1035.jar</systemPath>-->
+        <!--</dependency>-->
     </dependencies>
 
 </project>

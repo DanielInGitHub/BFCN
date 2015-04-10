@@ -5,86 +5,63 @@ import daniel.exception.FolderUnreachableException;
 import daniel.view.bottomside.StatusBar;
 import daniel.view.util.ImageFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 这个是FolderTree的原型，保留的目的就是形成一个对比，主要是看代码的优化
+ * The reason why I didn't use the local file icon on the treeItem
+ * is the transform between local and Java is not perfect
+ * for there is a black frame around the image.
+ * <p>
+ * 这里没有使用从本地系统获取文件的图片做树节点的图标是因为经过转换之后的图标四周有黑框
+ * 也就是并不是完美的获得的图标
  * Created by daniel chiu on 2015/4/8.
  */
 @Deprecated
-public class FolderSelector
+public class FolderTree_OldVersion
 {
-    /*显示目录结构的树*/
-    private Tree tree;
 
-    /*在树控件的外面添加可滚动的面板控件*/
-//    private ScrolledComposite scrolledComposite;
+    private Tree tree;
 
     /*存储树的根节点的File对象数组*/
     private List<File> files = new ArrayList<File>();
+    private TreeItem[] treeItems;
 
-    public FolderSelector(Composite composite, List<File> files)
+
+    public FolderTree_OldVersion(Composite parent, int style, List<File> files)
     {
-        //该树控件的外面添加可滚动的面板控件
-//        scrolledComposite = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-//        scrolledComposite.setLayout(new FillLayout());
-
-        tree = new Tree(composite, SWT.SINGLE);
-//        scrolledComposite.setContent(tree);
-
-        for (File file : files)
-            if (DiskDetect.checkFolder(file))
-                this.files.add(file);
-
+        tree = new Tree(parent, style);
+        this.files = files;
         initTree();
-        tree.setSize(800, 1000);
-
     }
 
     /**
      * 设置tree节点的信息
      */
-    private void initTree()
+    public void initTree()
     {
-        //获得所有可操作的磁盘
         for (int i = 0; i < files.size(); i++) {
-            TreeItem root = new TreeItem(tree, SWT.NONE);
-
             File file = files.get(i);
 
-            root.setText(file.toString());
-            //将file路径（String）和TreeItem对象绑定，便于之后获取，节省内存
-            root.setData(file.toString());
-
-            //设置系统盘符的图标
-            String[] strings = file.getAbsolutePath().split(":");
-            if (!strings[0].equals(DiskDetect.getSystemDisk()))
-                root.setImage(ImageFactory.loadImage(root.getDisplay(), "disk.ico"));
-            else root.setImage(ImageFactory.loadImage(root.getDisplay(), "system_disk.ico"));
-
-            List<File> list = null;
-            try {
-                list = DiskDetect.getChildFolders(file.toString());
-            } catch (FolderUnreachableException e) {
-                //将这里的报错文件夹(file)显示在工具栏中
-                StatusBar.setStatusMessage("访问文件夹\"" + e.getMessage() + "\"的权限不够");
-//                StatusBar.statusbarLabel.setText("访问文件夹\"" + e.getMessage() + "\"的权限不够");
-//                StatusBar.statusbarLabel.redraw();
-            }
-            if (list != null)
-                for (int j = 0; j < list.size(); j++) {
-                    newTreeItem(root, list.get(j));
-                }
+            initRootItem(i, file.toString());
+            initSecondLayerItem(treeItems[i], file.toString());
         }
 
+        addTreeEventListener();
+    }
+
+    /**
+     * 给树添加监控器
+     */
+    private void addTreeEventListener()
+    {
         tree.addTreeListener(new TreeAdapter()
         {
             @Override
@@ -110,6 +87,51 @@ public class FolderSelector
         });
     }
 
+    /**
+     * 初始化树的次根节点信息
+     *
+     * @param treeItem
+     * @param filePath
+     */
+    private void initSecondLayerItem(TreeItem treeItem, String filePath)
+    {
+        List<File> list = null;
+        try {
+            list = DiskDetect.getChildFolders(filePath);
+        } catch (FolderUnreachableException e) {
+            //将这里的报错文件夹(file)显示在工具栏中
+            StatusBar.setStatusMessage("访问文件夹\"" + e.getMessage() + "\"的权限不够");
+//            StatusBar.statusbarLabel.setText("访问文件夹\"" + e.getMessage() + "\"的权限不够");
+//            StatusBar.statusbarLabel.redraw();
+        }
+        if (list != null)
+            for (int i = 0; i < list.size(); i++) {
+                newTreeItem(treeItem, list.get(i));
+            }
+    }
+
+    /**
+     * 初始化树的根节点信息
+     *
+     * @param i
+     * @param filePath
+     */
+    private void initRootItem(int i, String filePath)
+    {
+        treeItems = new TreeItem[files.size()];
+        treeItems[i] = new TreeItem(tree, SWT.NONE);
+
+        treeItems[i].setText(filePath);
+        //将file路径（String）和TreeItem对象绑定，便于之后获取，节省内存
+        treeItems[i].setData(filePath);
+
+        //设置系统盘符的图标
+        String[] strings = filePath.split(":");
+        if (!strings[0].equals(DiskDetect.getSystemDisk()))
+            treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "disk.ico"));
+        else treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "system_disk.ico"));
+    }
+
 
     /**
      * 给father这个节点添加可以添加的所有节点
@@ -129,8 +151,7 @@ public class FolderSelector
                 list = DiskDetect.getChildFolders(filePath);
             } catch (FolderUnreachableException e) {
                 StatusBar.setStatusMessage("访问文件夹\"" + e.getMessage() + "\"的权限不够");
-//                String message = e.getMessage();
-//                StatusBar.statusbarLabel.setText("访问文件夹\"" + message + "\"的权限不够");
+//                StatusBar.statusbarLabel.setText("访问文件夹\"" + e.getMessage() + "\"的权限不够");
 //                StatusBar.statusbarLabel.redraw();
             }
             if (list != null)

@@ -1,8 +1,12 @@
 package daniel.controller;
 
 import daniel.exception.FolderUnreachableException;
+import daniel.exception.NeedFolderException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +15,7 @@ import java.util.List;
  */
 public class DiskDetect
 {
+
     /**
      * 获得本操作系统中所有的可操作盘符（不包括不能读取的磁盘，比如没有放入光盘的光驱）
      *
@@ -18,38 +23,41 @@ public class DiskDetect
      */
     public static List<File> getEffectiveDisks()
     {
+        /*列出当前系统所有的磁盘*/
         File[] tmpFiles = File.listRoots();
         List<File> files = new ArrayList<File>();
-        for (File file : tmpFiles) {
-            if (file.canExecute())
+
+        for (File file : tmpFiles)
+            if (checkFolder(file))
                 files.add(file);
-        }
         return files;
     }
 
     /**
      * 获得指定文件夹下所有的子文件夹，不包含文件
      *
-     * @param parentFolders
+     * @param parentFolderPath
      * @return
      */
-    public static List<File> getChildFolders(File parentFolders) throws FolderUnreachableException
+    public static List<File> getChildFolders(String parentFolderPath) throws FolderUnreachableException
     {
+        File parentFolder = new File(parentFolderPath);
         //判断该文件是否为文件夹，同时判断该文件夹是否可操作
-        if (!parentFolders.isDirectory() && !parentFolders.canExecute())
+        if (!parentFolder.isDirectory() && !parentFolder.canExecute())
             return null;
 
-        List<File> folders = new ArrayList<File>();
-        File[] files = parentFolders.listFiles();
-        //判断有没有parentFolders文件夹的访问权限，如果没有，parentFolders为null
-        if (files != null)
+        List<File> folders = null;
+        File[] files = parentFolder.listFiles();
+        if (files != null) {
+            folders = new ArrayList<File>();
+            //判断有没有parentFolders文件夹的访问权限，如果没有，parentFolders为null
             for (File file : files) {
-                if (file != null && file.isDirectory() && file.canExecute())
+                if (checkFolder(file))
                     folders.add(file);
             }
-        else
+        } else
             //当没有该文件夹的访问权限时报FolderUnreachableException/* + "文件夹无法访问"*/
-            throw new FolderUnreachableException(parentFolders.toString());
+            throw new FolderUnreachableException(parentFolder.toString());
 
         return folders;
     }
@@ -57,16 +65,16 @@ public class DiskDetect
     /**
      * 获得指定文件夹下所有的子文件，不包含文件夹
      *
-     * @param parentFolders
+     * @param parentFolder
      * @return
      */
-    public static List<File> getChildFiles(File parentFolders)
+    public static List<File> getChildFiles(File parentFolder)
     {
-        if (!parentFolders.isFile())
+        if (!parentFolder.isFile())
             return null;
 
         List<File> files = new ArrayList<File>();
-        File[] tmpFiles = parentFolders.listFiles();
+        File[] tmpFiles = parentFolder.listFiles();
         for (File file : tmpFiles) {
             if (file.isFile())
                 files.add(file);
@@ -85,4 +93,63 @@ public class DiskDetect
         String[] strings = string.split(":");
         return strings[0];
     }
+
+    public static File getSpecialFolder(String folder)
+    {
+        String result = "";
+        try {
+            File file = File.createTempFile("realhowto", ".vbs");
+            file.deleteOnExit();
+            FileWriter fw = new java.io.FileWriter(file);
+
+            String vbs = "Set WshShell = WScript.CreateObject(\"WScript.Shell\")\n"
+                    + "wscript.echo WshShell.SpecialFolders(\""
+                    + folder
+                    + "\")\n" + "Set WSHShell = Nothing\n";
+
+            fw.write(vbs);
+            fw.close();
+            Process p = Runtime.getRuntime().exec(
+                    "cscript //NoLogo " + file.getPath());
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                    p.getInputStream()));
+            result = input.readLine();
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new File(result);
+    }
+
+    /**
+     * 检查是否File对象是否为有效的文件夹
+     *
+     * @param file
+     * @return
+     */
+    public static boolean checkFolder(File file)
+    {
+        if (file.isDirectory() && file.canExecute())
+            return true;
+        else return false;
+    }
+
+
+    public static String SF_ALLUSERSDESKTOP = "AllUsersDesktop";
+    public static String SF_ALLUSERSSTARTMENU = "AllUsersStartMenu";
+    public static String SF_ALLUSERSPROGRAMS = "AllUsersPrograms";
+    public static String SF_ALLUSERSSTARTUP = "AllUsersStartup";
+    public static String SF_DESKTOP = "Desktop";
+    public static String SF_FAVORITES = "Favorites";
+    public static String SF_MYDOCUMENT = "MyDocuments";
+    public static String SF_PROGRAMS = "Programs";
+    public static String SF_RECENT = "Recent";
+    public static String SF_SENDTO = "SendTo";
+    public static String SF_STARTMENU = "StartMenu";
+    public static String SF_STARTUP = "Startup";
 }
+
+//public enum SpecialFolder
+//{
+//    AllUsersDesktop, AllUsersStartMenu, AllUsersPrograms, AllUsersStartup, Desktop, Favorites, MyDocuments, Programs, Recent, SendTo, StartMenu, Startup
+//}
