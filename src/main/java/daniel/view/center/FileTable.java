@@ -4,11 +4,8 @@ import daniel.controller.DiskDetect;
 import daniel.controller.IconDetect;
 import daniel.exception.NeedFolderException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,12 +17,61 @@ import java.util.List;
 public class FileTable
 {
     private Table table;
+    private Button selectAll, selectInverse;
+    private Composite centerComposite;
+    private Composite buttonComposite;
     private List<File> folders = new ArrayList<File>();
     private String[] tableHeaders = {};
 
-    public FileTable(Composite composite, List<File> folders, String[] tableHeaders) throws NeedFolderException
+    public FileTable(Composite composite, int style, List<File> folders, String[] tableHeaders) throws NeedFolderException
     {
-        setTable(composite);
+        centerComposite = new Composite(composite, SWT.NONE);
+        FormLayout formLayout = new FormLayout();
+        centerComposite.setLayout(formLayout);
+
+//        centerComposite.setLayout();
+//        setTable(composite, style);
+
+        //表格布局
+//        GridData gridData = new GridData();
+//        gridData.horizontalAlignment = SWT.FILL;
+//        gridData.grabExcessHorizontalSpace = true;
+//        gridData.grabExcessVerticalSpace = true;
+//        gridData.verticalAlignment = SWT.FILL;
+
+        FormData formData = new FormData();
+//        formData.height = 20;
+        formData.left = new FormAttachment(0, 0);
+        formData.right = new FormAttachment(100, 0);
+        formData.top = new FormAttachment(0, 0);
+        formData.bottom = new FormAttachment(100, -20);
+//        statusbar.setLayoutData(formData);
+
+        //创建表格，使用SWT.FULL_SELECTION样式，可同时选中一行
+        table = new Table(centerComposite, style);
+        table.setHeaderVisible(true);//设置显示表头
+        table.setLayout(new FillLayout());
+        table.setLayoutData(formData);
+        table.setLinesVisible(true);//暂时设置不显示表格线
+
+        // 设置工具栏在Shell中的形状为水平抢占充满，并高位20像素
+        FormData formData1 = new FormData();
+//        formData.height = 20;
+        formData1.bottom = new FormAttachment(100, 0);
+//        statusbar.setLayoutData(formData);
+
+        buttonComposite = new Composite(centerComposite, SWT.NONE);
+        buttonComposite.setLayoutData(formData1);
+
+        // 设置为用行列式布局管理状态栏里的组件
+        RowLayout layout = new RowLayout();
+        layout.marginLeft = layout.marginTop = 0; // 无边距
+        buttonComposite.setLayout(layout);
+
+        selectAll = new Button(buttonComposite, SWT.CHECK);
+        selectAll.setText("全选");
+        selectInverse = new Button(buttonComposite, SWT.CHECK);
+        selectInverse.setText("反选");
 
         if (tableHeaders != null)
             this.tableHeaders = tableHeaders;
@@ -41,9 +87,7 @@ public class FileTable
 
     private void setTableItems()
     {
-        List<File> files = new ArrayList<File>();
-        for (File folder : folders)
-            files.addAll(DiskDetect.getChildFiles(folder));
+        List<File> files = getFiles();
 
         for (File file : files) {
             setDefaultTableItem(file);
@@ -52,16 +96,26 @@ public class FileTable
         rePackTable();
     }
 
+    private List<File> getFiles()
+    {
+        List<File> files = new ArrayList<File>();
+        for (File folder : folders)
+            files.addAll(DiskDetect.getChildFiles(folder));
+        return files;
+    }
+
     private void setDefaultTableItem(File file)
     {
         TableItem item = new TableItem(table, SWT.NONE);
         String fileExtensionName = null;
+        String filePureName = null;
         try {
             fileExtensionName = DiskDetect.getFileExtensionName(file);
+            filePureName = DiskDetect.getFilePureName(file);
         } catch (NeedFolderException e) {
             e.printStackTrace();
         }
-        item.setText(new String[]{file.getName(), "", fileExtensionName, ""});
+        item.setText(new String[]{filePureName, "", fileExtensionName, ""});
         item.setImage(IconDetect.getSWTImageFromSwing(table.getDisplay(), file));
     }
 
@@ -108,23 +162,24 @@ public class FileTable
         }
     }
 
-    private void setTable(Composite composite)
+    private void setTable(Composite composite, int style)
     {
         //表格布局
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = SWT.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        gridData.grabExcessVerticalSpace = true;
-        gridData.verticalAlignment = SWT.FILL;
+//        GridData gridData = new GridData();
+//        gridData.horizontalAlignment = SWT.FILL;
+//        gridData.grabExcessHorizontalSpace = true;
+//        gridData.grabExcessVerticalSpace = true;
+//        gridData.verticalAlignment = SWT.FILL;
 
         //创建表格，使用SWT.FULL_SELECTION样式，可同时选中一行
-        table = new Table(composite, SWT.CHECK);
+        table = new Table(composite, style);
         table.setHeaderVisible(true);//设置显示表头
-        table.setLayoutData(gridData);//设置表格布局
-        table.setLinesVisible(true);//设置显示表格线
+        table.setLayout(new FillLayout());
+//        table.setLayoutData(gridData);//设置表格布局
+        table.setLinesVisible(true);//暂时设置不显示表格线
     }
 
-    public void setFolders(List<File> folders)
+    public void refreshFiles(List<File> folders)
     {
         if (folders != null)
             this.folders = checkFolders(folders);

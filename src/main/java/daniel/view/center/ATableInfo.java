@@ -7,6 +7,7 @@ import java.util.Map;
 /**
  * Created by daniel chiu on 2015/4/11.
  */
+@Deprecated
 public abstract class ATableInfo
 {
     private String[] headers;
@@ -25,8 +26,15 @@ public abstract class ATableInfo
 
     public abstract GeneratorI[] generate(String[] header);
 
+//    public abstract GeneratorI generate(String header);
+
     public void setGenerators()
     {
+        for (int i = 0; i < headers.length; i++) {
+            //写了一个回调方法
+            GeneratorI[] gens = generate(headers);
+            generators.put(headers[i], gens[i]);
+        }
         for (int i = 0; i < headers.length; i++) {
             //写了一个回调方法
             GeneratorI[] gens = generate(headers);

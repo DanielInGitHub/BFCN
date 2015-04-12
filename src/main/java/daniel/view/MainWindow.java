@@ -17,6 +17,7 @@ public class MainWindow
     private static StatusBar statusBar;
     private static SashForm sashForm;
     private static LeftPart leftPart;
+    private static RightPart_1 rightPart1;
     private static RightPart rightPart;
 //    private static ToolBar toolBar= new ToolBar(shell);
 
@@ -66,10 +67,11 @@ public class MainWindow
          * 父控件为sashForm,左右占比3:7
          */
         leftPart = new LeftPart(sashForm);
-        rightPart = new RightPart(sashForm);
+        rightPart= new RightPart(sashForm);
+//        rightPart1 = new RightPart_1(sashForm);
         sashForm.setWeights(new int[]{30, 70});
 
-        TopPart topPart = new TopPart(leftPart, rightPart);
+//        TopPart_1 topPart1 = new TopPart_1(leftPart, rightPart1);
     }
 
     /**

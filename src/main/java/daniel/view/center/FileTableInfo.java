@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * Created by daniel chiu on 2015/4/11.
  */
+@Deprecated
 public class FileTableInfo extends ATableInfo
 {
     private String[] tmpHeaders = {"原文件名", "新文件名", "后缀", "状态"};

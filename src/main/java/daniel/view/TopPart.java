@@ -1,52 +1,25 @@
 package daniel.view;
 
-import daniel.view.center.FileTable;
-import daniel.view.leftside.FolderTree;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import daniel.view.upside.FunctionButtons;
+import daniel.view.upside.FunctionTab;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Composite;
 
 /**
- * Created by daniel chiu on 2015/4/10.
+ * Created by daniel chiu on 2015/4/12.
  */
 public class TopPart
 {
-    private LeftPart leftPart;
-    private RightPart rightPart;
+    private FunctionTab functionTab;
+    private FunctionButtons functionButtons;
+    private SashForm sashForm;
 
-    public TopPart(LeftPart leftPart, RightPart rightPart)
+    public TopPart(Composite composite)
     {
-        this.leftPart = leftPart;
-        this.rightPart = rightPart;
-
-        FolderTree folderTree = leftPart.getFolderTree();
-        final FileTable fileTable = rightPart.getFileTable();
-
-        folderTree.addTreeSelectionListener(new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                Tree tree = (Tree) e.widget;
-                TreeItem[] treeItems = tree.getSelection();
-                List<File> folders = new ArrayList<File>();
-                for (TreeItem item : treeItems) {
-                    String tmp = (String) item.getData();
-                    folders.add(new File(tmp));
-                }
-                fileTable.setFolders(folders);
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e)
-            {
-                super.widgetDefaultSelected(e);
-            }
-        });
+        sashForm = new SashForm(composite, SWT.HORIZONTAL | SWT.SMOOTH);
+        functionTab = new FunctionTab(sashForm);
+        functionButtons = new FunctionButtons(sashForm);
+        sashForm.setWeights(new int[]{80, 20});
     }
 }

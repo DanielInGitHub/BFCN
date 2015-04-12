@@ -7,6 +7,7 @@ import java.util.Map;
 /**
  * Created by daniel chiu on 2015/4/11.
  */
+@Deprecated
 public abstract class RuleI
 {
     private Map<String, String> rules/* = new HashMap<String, String>()*/;
