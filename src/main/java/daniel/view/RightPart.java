@@ -1,5 +1,6 @@
 package daniel.view;
 
+import daniel.view.center.FileTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -19,5 +20,10 @@ public class RightPart
         topPart = new TopPart(sashForm);
         centerPart = new CenterPart(sashForm);
         sashForm.setWeights(new int[]{20, 80});
+    }
+
+    public FileTable getFileTable()
+    {
+        return centerPart.getFileTable();
     }
 }

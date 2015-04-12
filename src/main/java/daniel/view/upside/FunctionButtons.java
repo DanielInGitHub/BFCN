@@ -24,6 +24,6 @@ public class FunctionButtons
         preView = new Button(composite1, SWT.PUSH);
         preView.setText("预览");
         execute = new Button(composite1, SWT.PUSH);
-        execute.setText("执行");
+        execute.setText("执行修改");
     }
 }
