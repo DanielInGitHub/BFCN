@@ -7,6 +7,6 @@ public class NeedFolderException extends Exception
 {
     public NeedFolderException(String message)
     {
-        super(message);
+        super(message + "不是文件夹");
     }
 }

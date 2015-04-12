@@ -1,10 +1,13 @@
 package daniel.view.leftside;
 
 import daniel.controller.DiskDetect;
+import daniel.controller.IconDetect;
 import daniel.exception.FolderUnreachableException;
 import daniel.view.bottomside.StatusBar;
 import daniel.view.util.ImageFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +15,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,13 +46,17 @@ public class FolderTree
     private Tree tree;
 
     /*存储树的根节点的File对象数组*/
-    private List<File> files;
+    private List<File> files = new ArrayList<File>();
     private TreeItem[] treeItems;
 
 
     public FolderTree(Composite parent, int style, List<File> files)
     {
         tree = new Tree(parent, style);
+        //文件夹树，如果没有传递文件夹的信息，那么树就显示
+        if (files == null)
+            return;
+
         this.files = files;
         initTree();
     }
@@ -76,13 +84,23 @@ public class FolderTree
             {
                 // 首先获得触发事件的TreeItem
                 TreeItem father = (TreeItem) e.item;
-                if (father.getParentItem() != null)
-                    father.setImage(ImageFactory.loadImage(father.getDisplay(), "folder_open.ico"));
+//                if (father.getParentItem() != null)
+//                    father.setImage(ImageFactory.loadImage(father.getDisplay(), "folder_open.ico"));
                 father.removeAll();
                 addChildTreeItem(father);
                 tree.redraw();
             }
         });
+    }
+
+    /**
+     * 公开给树添加点击事件的接口
+     *
+     * @param selectionAdapter
+     */
+    public void addTreeSelectionListener(SelectionAdapter selectionAdapter)
+    {
+        tree.addSelectionListener(selectionAdapter);
     }
 
     /**
@@ -99,15 +117,16 @@ public class FolderTree
         treeItems[i].setText(filePath);
         //将file路径（String）和TreeItem对象绑定，便于之后获取，节省内存
         treeItems[i].setData(filePath);
+        treeItems[i].setImage(IconDetect.getSWTImageFromSwing(treeItems[i].getDisplay(), new File(filePath)));
 
         /*给所有不管有没有子节点的节点都添加一个子节点*/
         addFadeTreeItem(treeItems[i]);
 
         //设置系统盘符的图标
-        String[] strings = filePath.split(":");
-        if (!strings[0].equals(DiskDetect.getSystemDisk()))
-            treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "disk.ico"));
-        else treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "system_disk.ico"));
+//        String[] strings = filePath.split(":");
+//        if (!strings[0].equals(DiskDetect.getSystemDisk()))
+//            treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "disk.ico"));
+//        else treeItems[i].setImage(ImageFactory.loadImage(treeItems[i].getDisplay(), "system_disk.ico"));
     }
 
 
@@ -147,7 +166,8 @@ public class FolderTree
         TreeItem treeItem = new TreeItem(father, SWT.NONE);
         treeItem.setText(tmpFile.getName());
         treeItem.setData(filePath);
-        treeItem.setImage(ImageFactory.loadImage(father.getDisplay(), "folder.ico"));
+        treeItem.setImage(IconDetect.getSWTImageFromSwing(father.getDisplay(), tmpFile));
+//        treeItem.setImage(ImageFactory.loadImage(father.getDisplay(), "folder.ico"));
 
         addFadeTreeItem(treeItem);
     }

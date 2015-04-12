@@ -69,7 +69,7 @@ public class MainWindow
         rightPart = new RightPart(sashForm);
         sashForm.setWeights(new int[]{30, 70});
 
-
+        TopPart topPart = new TopPart(leftPart, rightPart);
     }
 
     /**

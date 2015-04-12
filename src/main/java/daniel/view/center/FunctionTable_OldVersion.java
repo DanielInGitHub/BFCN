@@ -13,11 +13,11 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * Created by daniel chiu on 2015/4/10.
  */
-public class FunctionTable
+public class FunctionTable_OldVersion
 {
     private Table table;
 
-    public FunctionTable(Composite composite)
+    public FunctionTable_OldVersion(Composite composite)
     {
 
         //表格布局

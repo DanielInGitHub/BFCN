@@ -70,16 +70,54 @@ public class DiskDetect
      */
     public static List<File> getChildFiles(File parentFolder)
     {
-        if (!parentFolder.isFile())
+        if (parentFolder.isFile())
             return null;
 
         List<File> files = new ArrayList<File>();
         File[] tmpFiles = parentFolder.listFiles();
-        for (File file : tmpFiles) {
-            if (file.isFile())
-                files.add(file);
-        }
+        if (tmpFiles != null)
+            for (File file : tmpFiles) {
+                if (file.isFile())
+                    files.add(file);
+            }
         return files;
+    }
+
+    /**
+     * 获得文件的后缀名，若文件没有后缀，则返回 ""
+     *
+     * @param file
+     * @return
+     * @throws NeedFolderException
+     */
+    public static String getFileExtensionName(File file) throws NeedFolderException
+    {
+        if (checkFolder(file))
+            throw new NeedFolderException(file.toString());
+        String fileName = file.getName();
+        int i = fileName.lastIndexOf(".");
+        String fileExtensionName = "";
+        if (i != -1)
+            fileExtensionName = fileName.substring(i + 1);
+        return fileExtensionName;
+    }
+
+    /**
+     * 得到文件不带后缀的文件名
+     *
+     * @param file
+     * @return
+     * @throws NeedFolderException
+     */
+    public static String getFilePureName(File file) throws NeedFolderException
+    {
+        if (checkFolder(file))
+            throw new NeedFolderException(file.toString());
+        String fileName = file.getName();
+        int i = fileName.lastIndexOf(".");
+        if (i != -1)
+            fileName = fileName.substring(0, i);
+        return fileName;
     }
 
     /**
