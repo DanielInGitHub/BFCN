@@ -20,7 +20,6 @@ public class TabAdd extends SuperTab
     private Text text1;
     private Text text2;
     private Text text3;
-    private Text text4;
 
 
     private TextWithArrows textWithArrows1;
@@ -53,7 +52,13 @@ public class TabAdd extends SuperTab
         textWithArrows1 = new TextWithArrows(secondLine);
         label4 = new Label(secondLine, SWT.CENTER);
         label4.setText("个字符后添加：");
-        text4 = new Text(secondLine, SWT.SINGLE | SWT.BORDER);
+        text3 = new Text(secondLine, SWT.SINGLE | SWT.BORDER);
+    }
+
+    @Override
+    public Text[] getTexts()
+    {
+        return new Text[]{text1, text2, textWithArrows1.getText(), text3};
     }
 
     private void setSecondLineLayout()

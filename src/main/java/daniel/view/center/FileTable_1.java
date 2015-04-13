@@ -1,5 +1,6 @@
 package daniel.view.center;
 
+import daniel.controller.DiskDetect;
 import daniel.controller.IconDetect;
 import daniel.exception.NeedFolderException;
 import daniel.view.bottomside.StatusBar;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * Created by daniel chiu on 2015/4/10.
  */
-public class FileTable
+public class FileTable_1
 {
     private Table table;
 
@@ -36,21 +37,24 @@ public class FileTable
      * folders文件夹里的所有文件都可以显示在表格里，所以可以同时指定多个文件夹
      * 在这里直接进行初始化是因为如果没有给定文件夹表格只是不显示内容而不至于出错
      */
-    private List<File> files = new ArrayList<File>();
+    private List<File> folders = new ArrayList<File>();
 
     /**
      * 对表头进行指定
      */
-    private ColumnData[] columnDatas;
+    private String[] tableHeaders = {};
 
-    public FileTable(Composite composite, int style, ColumnData[] columnDatas, List<File> files) throws NeedFolderException
+    public FileTable_1(Composite composite, int style, List<File> folders, String[] tableHeaders) throws NeedFolderException
     {
         setLayout(composite, style);
 
-        this.columnDatas = columnDatas;
-        this.files = files;
+        if (tableHeaders != null)
+            this.tableHeaders = tableHeaders;
 
         setTableHeaders();
+
+        if (folders != null)
+            this.folders = checkFolders(folders);
 
         setTableItems();
 
@@ -118,28 +122,28 @@ public class FileTable
      */
     private void setTableItems()
     {
-        //将columnDatas的每列list数据转换成二维数组
-        String[][] tmp = new String[columnDatas[0].getList().size()][columnDatas.length];
-        for (int i = 0; i < columnDatas.length; i++) {
-            ColumnData columnData = columnDatas[i];
-            for (int j = 0; j < columnData.getList().size(); j++)
-                //这里转置的一个关键点就在下面的j和i位置
-                tmp[j][i] = columnData.getList().get(j);
-        }
-
-        for (int i = 0; i < tmp.length; i++) {
-            Image image = IconDetect.getSWTImageFromSwing(table.getDisplay(), files.get(i));
-            setTableItem(tmp[i], image, files.get(i));
+        List<File> files = getFiles();
+        for (File file : files) {
+            setDefaultTableItem(file);
         }
 
         rePackTable();
     }
 
-    private void setTableItem(String[] rowData, Image image, File file)
+    /**
+     * 按照需要改变的列内容更改列
+     *
+     * @param list
+     */
+    @Deprecated
+    private void changeTable(List<String> list)
     {
-        TableItem item = new TableItem(table, SWT.NONE);
-        item.setText(rowData);
-        item.setImage(image);
+        List<File> files = getFiles();
+        int index = 0;
+        for (File file : files) {
+
+            setRenameTableItem(file, list.get(index++));
+        }
     }
 
     /**
@@ -149,47 +153,111 @@ public class FileTable
      */
     public List<File> getFiles()
     {
-        return this.files;
+        List<File> files = new ArrayList<File>();
+        for (File folder : folders)
+            files.addAll(DiskDetect.getChildFiles(folder));
+//        TableItem[] tableItems = table.getItems();
+//        for (int i = 0; i < tableItems.length; i++) {
+//            if (!tableItems[i].getChecked())
+//                files.remove(i);
+//        }
+        return files;
     }
 
     public List<File> getCheckedFiles()
     {
         List<File> files = new ArrayList<File>();
-        TableItem[] tableItems = table.getItems();
-        for (int i = 0; i < tableItems.length; i++) {
-            if (tableItems[i].getChecked())
-                files.add((File) tableItems[i].getData());
-        }
+        for (File folder : folders)
+            files.addAll(DiskDetect.getChildFiles(folder));
+//        TableItem[] tableItems = table.getItems();
+//        for (int i = 0; i < tableItems.length; i++) {
+//            if (!tableItems[i].getChecked())
+//                files.remove(i);
+//        }
         return files;
+    }
+
+    /**
+     * 表格的默认展现方式，但是这里有一点不好在于，不能将列的生成方式解耦
+     *
+     * @param file
+     */
+    @Deprecated
+    private void setDefaultTableItem(File file)
+    {
+        TableItem item = new TableItem(table, SWT.NONE);
+        item.setData(file);
+        String fileExtensionName = null;
+        String filePureName = null;
+        try {
+            fileExtensionName = DiskDetect.getFileExtensionName(file);
+            filePureName = DiskDetect.getFilePureName(file);
+        } catch (NeedFolderException e) {
+
+        }
+        item.setText(new String[]{filePureName, "", fileExtensionName, "就绪"});
+        item.setImage(IconDetect.getSWTImageFromSwing(table.getDisplay(), file));
+    }
+
+    /**
+     * 点了预览之后显示的表格元素
+     *
+     * @param file
+     */
+    @Deprecated
+    private void setRenameTableItem(File file, String string)
+    {
+        TableItem item = new TableItem(table, SWT.NONE);
+        String fileExtensionName = null;
+        try {
+            fileExtensionName = DiskDetect.getFileExtensionName(file);
+        } catch (NeedFolderException e) {
+            e.printStackTrace();
+        }
+        try {
+            item.setText(new String[]{DiskDetect.getFilePureName(file), string, fileExtensionName, ""});
+        } catch (NeedFolderException e) {
+            e.printStackTrace();
+        }
+        item.setImage(IconDetect.getSWTImageFromSwing(table.getDisplay(), file));
+    }
+
+    @Deprecated
+    private void setRenameTableItem(String[] columns, Image image)
+    {
+        TableItem item = new TableItem(table, SWT.NONE);
+//        String fileExtensionName = null;
+//        try {
+//            fileExtensionName = DiskDetect.getFileExtensionName(file);
+//        } catch (NeedFolderException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            item.setText(new String[]{DiskDetect.getFilePureName(file), string, fileExtensionName, ""});
+//        } catch (NeedFolderException e) {
+//            e.printStackTrace();
+//        }
+        item.setText(columns);
+        item.setImage(image);
     }
 
     /**
      * 更改指定列的所有数据
      *
-     * @param columnDatas
+     * @param columnData1s
      */
-    public void changeColumns(ColumnData[] columnDatas)
+    private void changeColumn(ColumnData_1[] columnData1s)
     {
         TableItem[] tableItems = table.getItems();
 
-        for (ColumnData columnData : columnDatas) {
-            List<String> list = columnData.getList();
-            String columnName = columnData.getColumnName();
+        for (ColumnData_1 columnData1 : columnData1s) {
+            List<String> list = columnData1.getList();
+            String columnName = columnData1.getColumnName();
             int index = getHeaderIndex(columnName);
             if (index != -1)
                 for (int i = 0; i < tableItems.length; i++)
                     tableItems[i].setText(index, list.get(i));
         }
-    }
-
-
-    public void changeTableContent(ColumnData[] columnDatas, List<File> files)
-    {
-        this.files = files;
-        this.columnDatas = columnDatas;
-        table.removeAll();
-        setTableItems();
-        table.redraw();
     }
 
     /**
@@ -200,8 +268,8 @@ public class FileTable
      */
     private int getHeaderIndex(String columnName)
     {
-        for (int i = 0; i < columnDatas.length; i++)
-            if (columnDatas[i].getColumnName().equals(columnName))
+        for (int i = 0; i < tableHeaders.length; i++)
+            if (tableHeaders[i].equals(columnName))
                 return i;
         return -1;
     }
@@ -212,9 +280,48 @@ public class FileTable
     private void rePackTable()
     {
         //重新布局表格
-        for (int i = 0; i < this.columnDatas.length; i++) {
+        for (int i = 0; i < this.tableHeaders.length; i++) {
             table.getColumn(i).pack();
         }
+    }
+
+    @Deprecated
+    public void refreshFiles(List<File> folders)
+    {
+        if (folders != null)
+            this.folders = checkFolders(folders);
+        table.removeAll();
+        setTableItems();
+        table.redraw();
+    }
+
+    @Deprecated
+    public void change(ColumnData_1[] columnData1s)
+    {
+        if (folders != null)
+            this.folders = checkFolders(folders);
+//        table.removeAll();
+        changeColumn(columnData1s);
+//        changeTable(list);
+        rePackTable();
+        table.redraw();
+    }
+
+    /**
+     * 检查传递进来的文件夹是否都为文件夹，将不是的剔除
+     * <p>
+     * 但是也考虑到不需要检查，因为控件的使用者传递了错误的参数就运行不起来。
+     * 所以理论上来讲，传递进来的一定是文件夹，在这里多检查一遍有点浪费资源
+     *
+     * @param folders
+     * @return
+     */
+    private List<File> checkFolders(List<File> folders)
+    {
+        for (File folder : folders)
+            if (!DiskDetect.checkFolder(folder))
+                folders.remove(folder);
+        return folders;
     }
 
     /**
@@ -223,9 +330,9 @@ public class FileTable
     private void setTableHeaders()
     {
         //创建表头的字符串数组
-        for (int i = 0; i < columnDatas.length; i++) {
+        for (int i = 0; i < tableHeaders.length; i++) {
             TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-            tableColumn.setText(columnDatas[i].getColumnName());
+            tableColumn.setText(tableHeaders[i]);
             //设置表头可移动，默认为false
             tableColumn.setMoveable(true);
         }

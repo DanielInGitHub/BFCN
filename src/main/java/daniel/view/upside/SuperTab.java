@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 
 
 /**
@@ -41,4 +42,6 @@ public abstract class SuperTab
     protected abstract void setFirstLine();
 
     protected abstract void setSecondLine();
+
+    public abstract Text[] getTexts();
 }

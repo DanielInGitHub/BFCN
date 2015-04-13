@@ -26,4 +26,14 @@ public class FunctionButtons
         execute = new Button(composite1, SWT.PUSH);
         execute.setText("执行修改");
     }
+
+    public Button getPreView()
+    {
+        return preView;
+    }
+
+    public Button getExecute()
+    {
+        return execute;
+    }
 }

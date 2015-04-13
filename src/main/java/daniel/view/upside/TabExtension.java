@@ -58,4 +58,10 @@ public class TabExtension extends SuperTab
         label4.setText("全部小写");
     }
 
+    @Override
+    public Text[] getTexts()
+    {
+        return new Text[]{text1};
+    }
+
 }

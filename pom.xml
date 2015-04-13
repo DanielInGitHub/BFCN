@@ -8,6 +8,10 @@
     <artifactId>BFCN</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
 
         <!--向依赖中添加添加本地的jar包-->
@@ -18,30 +22,83 @@
             <scope>system</scope>
             <systemPath>D:/lib/org.eclipse.swt.win32.win32.x86_64_3.103.2.v20150203-1351.jar</systemPath>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.core</groupId>-->
-        <!--<artifactId>runtime</artifactId>-->
-        <!--<version>3.10.0.v20140318-2214</version>-->
-        <!--<scope>system</scope>-->
-        <!--<systemPath>D:/lib/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar</systemPath>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.ui</groupId>-->
-        <!--<artifactId>workbench</artifactId>-->
-        <!--<version>3.106.2.v20150204-1030</version>-->
-        <!--<scope>system</scope>-->
-        <!--<systemPath>D:/lib/org.eclipse.ui.workbench_3.106.2.v20150204-1030.jar</systemPath>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.jface</groupId>-->
-        <!--<artifactId>jface</artifactId>-->
-        <!--<version>3.10.2.v20141021-1035</version>-->
-        <!--<scope>system</scope>-->
-        <!--<systemPath>D:/lib/org.eclipse.jface_3.10.2.v20141021-1035.jar</systemPath>-->
-        <!--</dependency>-->
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>shaded</shadedClassifierName>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>daniel.view.Window</mainClass>
+                        </transformer>
+                    </transformers>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
+                            <outfile>${project.build.directory}/hasCode.exe</outfile>
+                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <classPath>
+                                <mainClass>daniel.view.Window</mainClass>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <icon>src/main/resources/folder.ico</icon>
+                            <jre>
+                                <minVersion>1.6.0</minVersion>
+                                <jdkPreference>preferJre</jdkPreference>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${project.name}</fileDescription>
+                                <copyright>daniel.work</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>1.0.0.0</txtProductVersion>
+                                <productName>${project.name}</productName>
+                                <!--<companyName>hasCode.com</companyName>-->
+                                <internalName>BFCN</internalName>
+                                <originalFilename>BFCN.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

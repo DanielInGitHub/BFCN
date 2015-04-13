@@ -57,4 +57,14 @@ public class TabDelete extends SuperTab
         secondLine.setLayout(gridLayout);
     }
 
+    @Override
+    public Text[] getTexts()
+    {
+        return new Text[]{text1, textWithArrows1.getText(), textWithArrows2.getText()};
+    }
+
+    public Button getButton()
+    {
+        return button;
+    }
 }

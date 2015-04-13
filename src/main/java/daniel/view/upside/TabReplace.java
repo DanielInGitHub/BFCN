@@ -42,6 +42,12 @@ public class TabReplace extends SuperTab
         text2 = new Text(secondLine, SWT.SINGLE | SWT.BORDER);
     }
 
+    @Override
+    public Text[] getTexts()
+    {
+        return new Text[]{text1, text2};
+    }
+
 //    public TabReplace(TabFolder tabFolder)
 //    {
 //        formLayout = new FormLayout();

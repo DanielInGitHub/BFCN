@@ -21,6 +21,7 @@ public class TabAddNumber extends SuperTab
 
     private Group group;
     private Button button, button2;
+    private Combo combo;
 
     private TextWithArrows textWithArrows1, textWithArrows2;
 
@@ -54,11 +55,17 @@ public class TabAddNumber extends SuperTab
         textWithArrows2 = new TextWithArrows(secondLine);
     }
 
+    @Override
+    public Text[] getTexts()
+    {
+        return new Text[]{textWithArrows1.getText(), textWithArrows2.getText()};
+    }
+
     protected void setFirstLine()
     {
         label1 = new Label(firstLine, SWT.NONE);
         label1.setText("格式:");
-        Combo combo = new Combo(firstLine, SWT.DROP_DOWN);
+        combo = new Combo(firstLine, SWT.DROP_DOWN);
         String[] format = new String[]{"#.<SELF>", "#_<SELF>", "#<SELF>", "<SELF>#", "<SELF>_#", "<SELF>[#]", "Pic_#", "File_#", "图片#", "文件_#", "自定义格式#"};
         combo.setItems(format);
         combo.select(0);
@@ -72,5 +79,10 @@ public class TabAddNumber extends SuperTab
         GridLayout gridLayout = new GridLayout(10, false);
         secondLine.setLayout(gridLayout);
         firstLine.setLayout(gridLayout);
+    }
+
+    public Combo getCombo()
+    {
+        return combo;
     }
 }

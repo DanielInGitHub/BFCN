@@ -103,4 +103,9 @@ public class TextWithArrows
             }
         });
     }
+
+    public Text getText()
+    {
+        return text;
+    }
 }
