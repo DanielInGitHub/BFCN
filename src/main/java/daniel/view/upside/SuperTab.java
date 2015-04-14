@@ -1,12 +1,15 @@
 package daniel.view.upside;
 
+import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
+
+import java.io.File;
+import java.util.List;
 
 
 /**
@@ -43,5 +46,11 @@ public abstract class SuperTab
 
     protected abstract void setSecondLine();
 
-    public abstract Text[] getTexts();
+
+//    /**
+//     * 按照从上到下的顺序依次输出输入框的内容
+//     *
+//     * @return
+//     */
+    public abstract ColumnData[] execute(List<File> fileList);
 }

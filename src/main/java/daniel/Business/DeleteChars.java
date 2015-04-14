@@ -35,41 +35,67 @@ public class DeleteChars
     public List<String> rule()
     {
         List<String> list = new ArrayList<String>();
-        for (File file : files) {
-            StringBuffer buffer = new StringBuffer();
-            String str = "";
-            if (rule != null && !rule.equals(""))
-                try {
-                    str = DiskDetect.getFilePureName(file);
-                    int start = str.indexOf(rule);
-                    if (start != -1) {
-                        buffer.append(str.substring(0, start));
-                        buffer.append(str.substring(start + rule.length(), str.length()));
-                    } else buffer.append(str);
-                } catch (NeedFolderException e) {
-                    e.printStackTrace();
+        if (files != null) {
+            for (File file : files) {
+                StringBuffer buffer;
+                if (rule != null && !rule.equals(""))
+                    buffer = deleteSpecificChars(file, rule);
+                else {
+                    buffer = deleteLengthChars(file, start, length, reverse);
                 }
-            else {
-                try {
-                    str = DiskDetect.getFilePureName(file);
-                    if (start >= 0 && start <= str.length())
-                        try {
-                            if (!reverse) {
-                                buffer.append(str.substring(0, start));
-                                buffer.append(str.substring(start + length, str.length()));
-                            } else {
-                                buffer.append(str.substring(0, str.length() - start - length));
-                                buffer.append(str.substring(str.length() - start, str.length()));
-                            }
-                        } catch (StringIndexOutOfBoundsException e) {
-//                            StatusBar.setStatusMessage(e.getMessage());
-                        }
-                } catch (NeedFolderException e) {
-                    e.printStackTrace();
-                }
+                list.add(buffer.toString());
             }
-            list.add(buffer.toString());
         }
         return list;
+    }
+
+    /**
+     * 删除特定长度的字符串
+     *
+     * @param file
+     * @param start
+     * @param length
+     * @param reverse
+     * @return
+     */
+    private StringBuffer deleteLengthChars(File file, int start, int length, boolean reverse)
+    {
+        StringBuffer buffer = new StringBuffer();
+        String str;
+        try {
+            str = DiskDetect.getFilePureName(file);
+            if (start >= 0 && start <= str.length())
+                try {
+                    if (!reverse) {
+                        buffer.append(str.substring(0, start));
+                        buffer.append(str.substring(start + length, str.length()));
+                    } else {
+                        buffer.append(str.substring(0, str.length() - start - length));
+                        buffer.append(str.substring(str.length() - start, str.length()));
+                    }
+                } catch (StringIndexOutOfBoundsException e) {
+//                            StatusBar.setStatusMessage(e.getMessage());
+                }
+        } catch (NeedFolderException e) {
+            e.printStackTrace();
+        }
+        return buffer;
+    }
+
+    private StringBuffer deleteSpecificChars(File file, String rule)
+    {
+        StringBuffer buffer = new StringBuffer();
+        String str;
+        try {
+            str = DiskDetect.getFilePureName(file);
+            int start = str.indexOf(rule);
+            if (start != -1) {
+                buffer.append(str.substring(0, start));
+                buffer.append(str.substring(start + rule.length(), str.length()));
+            } else buffer.append(str);
+        } catch (NeedFolderException e) {
+            e.printStackTrace();
+        }
+        return buffer;
     }
 }

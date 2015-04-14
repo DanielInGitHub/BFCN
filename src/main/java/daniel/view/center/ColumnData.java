@@ -9,19 +9,30 @@ import java.util.List;
  */
 public class ColumnData
 {
+    //列名
     private String columnName;
+
+    //一列的数据
     private List<String> list;
-    private List<Image> images;
+
+    //默认不用定义此项，但是如果此项被赋值，则表示折现索引代表的行不用变换
+    private List<Integer> indexes;
 
     public ColumnData()
     {
     }
 
-    public ColumnData(String columnName, List<String> list/*, List<Image> images*/)
+    public ColumnData(String columnName, List<String> list)
     {
         this.columnName = columnName;
         this.list = list;
-//        this.images = images;
+    }
+
+    public ColumnData(String columnName, List<String> list, List<Integer> indexes)
+    {
+        this.columnName = columnName;
+        this.list = list;
+        this.indexes = indexes;
     }
 
     public String getColumnName()
@@ -36,8 +47,6 @@ public class ColumnData
 
     public List<String> getList()
     {
-//        if (list==null)
-//            return
         return list;
     }
 
@@ -46,13 +55,13 @@ public class ColumnData
         this.list = list;
     }
 
-    public List<Image> getImages()
+    public List<Integer> getIndexes()
     {
-        return images;
+        return indexes;
     }
 
-    public void setImages(List<Image> images)
+    public void setIndexes(List<Integer> indexes)
     {
-        this.images = images;
+        this.indexes = indexes;
     }
 }

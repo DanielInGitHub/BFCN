@@ -1,18 +1,22 @@
 package daniel.view.center;
 
+import daniel.controller.DiskDetect;
 import daniel.controller.IconDetect;
 import daniel.exception.NeedFolderException;
 import daniel.view.bottomside.StatusBar;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by daniel chiu on 2015/4/10.
@@ -36,10 +40,11 @@ public class FileTable
      * folders文件夹里的所有文件都可以显示在表格里，所以可以同时指定多个文件夹
      * 在这里直接进行初始化是因为如果没有给定文件夹表格只是不显示内容而不至于出错
      */
-    private List<File> files = new ArrayList<File>();
+    private List<File> files;
+    private List<Integer> indexes = new ArrayList<Integer>();
 
     /**
-     * 对表头进行指定
+     * 将每列数据都封装在ColumnData中
      */
     private ColumnData[] columnDatas;
 
@@ -118,21 +123,23 @@ public class FileTable
      */
     private void setTableItems()
     {
-        //将columnDatas的每列list数据转换成二维数组
-        String[][] tmp = new String[columnDatas[0].getList().size()][columnDatas.length];
-        for (int i = 0; i < columnDatas.length; i++) {
-            ColumnData columnData = columnDatas[i];
-            for (int j = 0; j < columnData.getList().size(); j++)
-                //这里转置的一个关键点就在下面的j和i位置
-                tmp[j][i] = columnData.getList().get(j);
-        }
+        if (columnDatas != null) {
+            //将columnDatas的每列list数据转换成二维数组
+            String[][] tmp = new String[columnDatas[0].getList().size()][columnDatas.length];
+            for (int i = 0; i < columnDatas.length; i++) {
+                ColumnData columnData = columnDatas[i];
+                for (int j = 0; j < columnData.getList().size(); j++)
+                    //这里转置的一个关键点就在下面的j和i位置
+                    tmp[j][i] = columnData.getList().get(j);
+            }
 
-        for (int i = 0; i < tmp.length; i++) {
-            Image image = IconDetect.getSWTImageFromSwing(table.getDisplay(), files.get(i));
-            setTableItem(tmp[i], image, files.get(i));
-        }
+            for (int i = 0; i < tmp.length; i++) {
+                Image image = IconDetect.getSWTImageFromSwing(table.getDisplay(), files.get(i));
+                setTableItem(tmp[i], image, files.get(i));
+            }
 
-        rePackTable();
+            rePackTable();
+        }
     }
 
     private void setTableItem(String[] rowData, Image image, File file)
@@ -140,6 +147,7 @@ public class FileTable
         TableItem item = new TableItem(table, SWT.NONE);
         item.setText(rowData);
         item.setImage(image);
+        item.setData(file);
     }
 
     /**
@@ -152,13 +160,22 @@ public class FileTable
         return this.files;
     }
 
+    /**
+     * 返回序号和文件对应的map
+     *
+     * @return
+     */
     public List<File> getCheckedFiles()
     {
         List<File> files = new ArrayList<File>();
+        //每次重新获得表格中的文件时必须重新建立索引
+        indexes.clear();
         TableItem[] tableItems = table.getItems();
         for (int i = 0; i < tableItems.length; i++) {
-            if (tableItems[i].getChecked())
+            if (tableItems[i].getChecked()) {
                 files.add((File) tableItems[i].getData());
+                indexes.add(i);
+            }
         }
         return files;
     }
@@ -177,12 +194,37 @@ public class FileTable
             String columnName = columnData.getColumnName();
             int index = getHeaderIndex(columnName);
             if (index != -1)
-                for (int i = 0; i < tableItems.length; i++)
-                    tableItems[i].setText(index, list.get(i));
+                //如果操作的是所有行
+                if (indexes.size() == tableItems.length)
+//                    if (columnData.getIndexes() == null)
+                    for (int i = 0; i < tableItems.length; i++)
+                        tableItems[i].setText(index, list.get(i));
+                else {
+                    //这个的目的在于。如果预览的时候更改了选择的个数，必须在现实预览或者结果之前将之前的结果清空
+                    for (int i = 0; i < tableItems.length; i++)
+                        tableItems[i].setText(index, "");
+                    int j = 0;
+                    for (int i : indexes) {
+                        //i表示的是表中哪一项需要更改，index表示那一列需要更改，j表示从list中一个个拿出数据拿出
+                        String s = list.get(j++);
+                        tableItems[i].setText(index, s);
+                        //这里的代码有点不符合控件的组件身份，这表明实现知道了各列的逻辑，实际中可以删去，由用户决定
+                        if (index == 3 && s.equals("文件同名")) {
+                            tableItems[i].setForeground(new Color(table.getDisplay(), 255, 0, 0));
+                            tableItems[i].setChecked(false);
+                        }
+                    }
+                }
         }
+        rePackTable();
     }
 
-
+    /**
+     * 如果要更改表格的整个内容（包括列）使用这个方法
+     *
+     * @param columnDatas
+     * @param files
+     */
     public void changeTableContent(ColumnData[] columnDatas, List<File> files)
     {
         this.files = files;
@@ -190,6 +232,49 @@ public class FileTable
         table.removeAll();
         setTableItems();
         table.redraw();
+    }
+
+    /**
+     * 默认表格显示四列："原文件名", "新文件名", "后缀", "状态"
+     * 如果采用默认的显示形式，只需要传递需要展示的文件夹就可以
+     *
+     * @param folders
+     */
+    public void defaultTableShow(List<File> folders)
+    {
+        List<File> childFiles = new ArrayList<File>();
+        for (File file : folders)
+            childFiles.addAll(DiskDetect.getChildFiles(file));
+
+        this.files = childFiles;
+        //表格表头
+        String[] tableHeaders = {"原文件名", "新文件名", "后缀", "状态"};
+        try {
+            List<String> list1 = new ArrayList<String>();
+            List<String> list2 = new ArrayList<String>();
+            List<String> list3 = new ArrayList<String>();
+            List<String> list4 = new ArrayList<String>();
+            for (File file1 : childFiles) {
+                list1.add(DiskDetect.getFilePureName(file1));
+                list2.add("");
+                list3.add(DiskDetect.getFileExtensionName(file1));
+                list4.add("");
+            }
+            ColumnData[] columnDatas = new ColumnData[tableHeaders.length];
+            columnDatas[0] = new ColumnData(tableHeaders[0], list1);
+            columnDatas[1] = new ColumnData(tableHeaders[1], list2);
+            columnDatas[2] = new ColumnData(tableHeaders[2], list3);
+            columnDatas[3] = new ColumnData(tableHeaders[3], list4);
+            this.columnDatas = columnDatas;
+            table.removeAll();
+
+            setTableHeaders();
+
+            setTableItems();
+//            table.redraw();
+        } catch (NeedFolderException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -222,13 +307,14 @@ public class FileTable
      */
     private void setTableHeaders()
     {
-        //创建表头的字符串数组
-        for (int i = 0; i < columnDatas.length; i++) {
-            TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-            tableColumn.setText(columnDatas[i].getColumnName());
-            //设置表头可移动，默认为false
-            tableColumn.setMoveable(true);
-        }
+        //创建表头的字符串数组.只有数据满足条件并且需要改变默认的列数的时候才重新添加列表头
+        if (columnDatas != null && table.getColumnCount() != 4)
+            for (int i = 0; i < columnDatas.length; i++) {
+                TableColumn tableColumn = new TableColumn(table, SWT.NONE);
+                tableColumn.setText(columnDatas[i].getColumnName());
+                //设置表头可移动，默认为false
+                tableColumn.setMoveable(true);
+            }
     }
 
     /**

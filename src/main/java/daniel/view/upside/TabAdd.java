@@ -1,10 +1,16 @@
 package daniel.view.upside;
 
+import daniel.Business.AddChars;
+import daniel.controller.StatesChecker;
+import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * Created by daniel chiu on 2015/4/12.
@@ -32,6 +38,21 @@ public class TabAdd extends SuperTab
         setSecondLine();
     }
 
+    public ColumnData[] execute(java.util.List<File> fileList)
+    {
+        String before = text1.getText();
+        String after = text2.getText();
+        String chars = text3.getText();
+
+        java.util.List<String> list = null;
+        int startNumber = textWithArrows1.getText();
+        if (startNumber != 0)
+            list = new AddChars(fileList, chars, startNumber).rule();
+        else
+            list = new AddChars(fileList, before, after).rule();
+        return new ColumnData[]{new ColumnData("新文件名", list), new ColumnData("状态", StatesChecker.checkFileName(list))};
+    }
+
     @Override
     protected void setFirstLine()
     {
@@ -55,15 +76,55 @@ public class TabAdd extends SuperTab
         text3 = new Text(secondLine, SWT.SINGLE | SWT.BORDER);
     }
 
-    @Override
-    public Text[] getTexts()
-    {
-        return new Text[]{text1, text2, textWithArrows1.getText(), text3};
-    }
+//    @Override
+//    public String[] getTexts()
+//    {
+//        return new String[]{text1.getText(), text2.getText(), textWithArrows1.getText().getText(), text3.getText()};
+//    }
 
     private void setSecondLineLayout()
     {
         GridLayout gridLayout = new GridLayout(10, false);
         secondLine.setLayout(gridLayout);
+    }
+
+    public Text getText1()
+    {
+        return text1;
+    }
+
+    public void setText1(Text text1)
+    {
+        this.text1 = text1;
+    }
+
+    public Text getText2()
+    {
+        return text2;
+    }
+
+    public void setText2(Text text2)
+    {
+        this.text2 = text2;
+    }
+
+    public Text getText3()
+    {
+        return text3;
+    }
+
+    public void setText3(Text text3)
+    {
+        this.text3 = text3;
+    }
+
+    public TextWithArrows getTextWithArrows1()
+    {
+        return textWithArrows1;
+    }
+
+    public void setTextWithArrows1(TextWithArrows textWithArrows1)
+    {
+        this.textWithArrows1 = textWithArrows1;
     }
 }

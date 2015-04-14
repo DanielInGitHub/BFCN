@@ -4,7 +4,6 @@ import daniel.controller.DiskDetect;
 import daniel.exception.NeedFolderException;
 import daniel.view.center.ColumnData;
 import daniel.view.center.FileTable;
-import daniel.view.center.FileTable_1;
 import daniel.view.leftside.FolderTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -45,7 +44,7 @@ public class MainWindow
         sashForm.setWeights(new int[]{30, 70});
 
         FolderTree folderTree = leftPart.getFolderTree();
-        final FileTable fileTable1 = rightPart.getFileTable();
+        final FileTable fileTable = rightPart.getFileTable();
 
         folderTree.addTreeSelectionListener(new SelectionAdapter()
         {
@@ -54,38 +53,17 @@ public class MainWindow
             {
                 Tree tree = (Tree) e.widget;
                 TreeItem[] items = tree.getSelection();
+
+                //获取所有选中的文件夹
                 List<File> folders = new ArrayList<File>();
                 for (TreeItem item : items) {
                     String folderPath = (String) item.getData();
                     folders.add(new File(folderPath));
                 }
-                List<File> childFiles = new ArrayList<File>();
-                for (File file : folders)
-                    childFiles.addAll(DiskDetect.getChildFiles(file));
-//                List<File> childFiles = DiskDetect.getChildFiles(file);
-                String[] tableHeaders = {"原文件名", "新文件名", "后缀", "状态"};
-                List<String> list1 = new ArrayList<String>();
-                List<String> list2 = new ArrayList<String>();
-                List<String> list3 = new ArrayList<String>();
-                List<String> list4 = new ArrayList<String>();
-                for (File file1 : childFiles) {
-                    try {
-                        list1.add(DiskDetect.getFilePureName(file1));
-                        list2.add("");
-                        list3.add(DiskDetect.getFileExtensionName(file1));
-                        list4.add("");
-                    } catch (NeedFolderException e1) {
-                        e1.printStackTrace();
-                    }
 
-                }
-                ColumnData[] columnDatas = new ColumnData[tableHeaders.length];
-                columnDatas[0] = new ColumnData(tableHeaders[0], list1);
-                columnDatas[1] = new ColumnData(tableHeaders[1], list2);
-                columnDatas[2] = new ColumnData(tableHeaders[2], list3);
-                columnDatas[3] = new ColumnData(tableHeaders[3], list4);
-                fileTable1.changeTableContent(columnDatas, childFiles);
+                fileTable.defaultTableShow(folders);
             }
         });
     }
+
 }

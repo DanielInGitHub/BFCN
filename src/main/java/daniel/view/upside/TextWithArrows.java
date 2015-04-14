@@ -104,8 +104,13 @@ public class TextWithArrows
         });
     }
 
-    public Text getText()
+    public int getText()
     {
-        return text;
+        try {
+            return Integer.valueOf(text.getText());
+        } catch (NumberFormatException e) {
+
+        }
+        return 0;
     }
 }

@@ -1,8 +1,14 @@
 package daniel.view.upside;
 
+import daniel.Business.DeleteChars;
+import daniel.controller.StatesChecker;
+import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * Created by daniel chiu on 2015/4/12.
@@ -29,6 +35,22 @@ public class TabDelete extends SuperTab
         setSecondLine();
     }
 
+    public ColumnData[] execute(java.util.List<File> fileList)
+    {
+        String deleteText = text1.getText();
+        int startNumber = textWithArrows1.getText();
+        int length = textWithArrows2.getText();
+
+        boolean reverse = button.getSelection();
+
+        java.util.List<String> list = null;
+        if (deleteText != null && !deleteText.equals(""))
+            list = new DeleteChars(fileList, deleteText).rule();
+        else
+            list = new DeleteChars(fileList, startNumber, length, reverse).rule();
+        return new ColumnData[]{new ColumnData("新文件名", list), new ColumnData("状态", StatesChecker.checkFileName(list))};
+    }
+
     protected void setSecondLine()
     {
         label2 = new Label(secondLine, SWT.CENTER);
@@ -44,6 +66,12 @@ public class TabDelete extends SuperTab
         label5.setText("是否倒着数");
     }
 
+//    @Override
+//    public String[] getTexts()
+//    {
+//        return new String[]{text1.getText(), textWithArrows1.getText().getText(), textWithArrows2.getText().getText()};
+//    }
+
     protected void setFirstLine()
     {
         label1 = new Label(firstLine, SWT.CENTER);
@@ -57,14 +85,44 @@ public class TabDelete extends SuperTab
         secondLine.setLayout(gridLayout);
     }
 
-    @Override
-    public Text[] getTexts()
-    {
-        return new Text[]{text1, textWithArrows1.getText(), textWithArrows2.getText()};
-    }
 
     public Button getButton()
     {
         return button;
+    }
+
+    public Text getText1()
+    {
+        return text1;
+    }
+
+    public void setText1(Text text1)
+    {
+        this.text1 = text1;
+    }
+
+    public void setButton(Button button)
+    {
+        this.button = button;
+    }
+
+    public TextWithArrows getTextWithArrows1()
+    {
+        return textWithArrows1;
+    }
+
+    public void setTextWithArrows1(TextWithArrows textWithArrows1)
+    {
+        this.textWithArrows1 = textWithArrows1;
+    }
+
+    public TextWithArrows getTextWithArrows2()
+    {
+        return textWithArrows2;
+    }
+
+    public void setTextWithArrows2(TextWithArrows textWithArrows2)
+    {
+        this.textWithArrows2 = textWithArrows2;
     }
 }

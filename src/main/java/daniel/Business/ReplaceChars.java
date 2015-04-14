@@ -35,13 +35,13 @@ public class ReplaceChars
                     int start = fileName.indexOf(original);
                     buffer.append(fileName.substring(0, start));
                     buffer.append(newString);
-                    buffer.append(fileName.substring(start + original.length(), original.length()));
+                    buffer.append(fileName.substring(start + original.length(), fileName.length()));
                 }
             } catch (NeedFolderException e) {
                 e.printStackTrace();
             }
             list.add(buffer.toString());
         }
-        return null;
+        return list;
     }
 }

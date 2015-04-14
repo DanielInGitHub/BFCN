@@ -1,5 +1,8 @@
 package daniel.view.upside;
 
+import daniel.Business.ChangeExtension;
+import daniel.controller.StatesChecker;
+import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
@@ -8,12 +11,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
+import java.io.File;
+
 /**
  * Created by daniel chiu on 2015/4/12.
  */
 public class TabExtension extends SuperTab
 {
-    private TabItem extension;
 
     private Label label1;
     private Label label2;
@@ -30,6 +34,16 @@ public class TabExtension extends SuperTab
         super(tabFolder, tabName);
         setFirstLine();
         setSecondLine();
+    }
+
+    public ColumnData[] execute(java.util.List<File> fileList)
+    {
+        String extension = text1.getText();
+        java.util.List<String> list = null;
+        if (button.getSelection())
+            list = new ChangeExtension(extension, true, fileList.size()).rule();
+        else list = new ChangeExtension(extension, false, fileList.size()).rule();
+        return new ColumnData[]{new ColumnData("后缀", list)/*, new ColumnData("状态", StatesChecker.checkFileName(list))*/};
     }
 
     @Override
@@ -58,10 +72,39 @@ public class TabExtension extends SuperTab
         label4.setText("全部小写");
     }
 
-    @Override
-    public Text[] getTexts()
+//    @Override
+//    public String[] getTexts()
+//    {
+//        return new String[]{text1.getText()};
+//    }
+
+    public Button getButton()
     {
-        return new Text[]{text1};
+        return button;
     }
 
+    public void setButton(Button button)
+    {
+        this.button = button;
+    }
+
+    public Button getButton2()
+    {
+        return button2;
+    }
+
+    public void setButton2(Button button2)
+    {
+        this.button2 = button2;
+    }
+
+    public Text getText1()
+    {
+        return text1;
+    }
+
+    public void setText1(Text text1)
+    {
+        this.text1 = text1;
+    }
 }

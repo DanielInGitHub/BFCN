@@ -1,10 +1,12 @@
 package daniel.view.upside;
 
+import daniel.Business.ReplaceChars;
+import daniel.controller.StatesChecker;
+import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
+
+import java.io.File;
 
 /**
  * Created by daniel chiu on 2015/4/12.
@@ -26,6 +28,14 @@ public class TabReplace extends SuperTab
         setSecondLine();
     }
 
+    public ColumnData[] execute(java.util.List<File> fileList)
+    {
+        String before = text1.getText();
+        String after = text2.getText();
+        java.util.List<String> list = new ReplaceChars(fileList, before, after).rule();
+        return new ColumnData[]{new ColumnData("新文件名", list), new ColumnData("状态", StatesChecker.checkFileName(list))};
+    }
+
     @Override
     protected void setFirstLine()
     {
@@ -42,48 +52,23 @@ public class TabReplace extends SuperTab
         text2 = new Text(secondLine, SWT.SINGLE | SWT.BORDER);
     }
 
-    @Override
-    public Text[] getTexts()
+    public Text getText1()
     {
-        return new Text[]{text1, text2};
+        return text1;
     }
 
-//    public TabReplace(TabFolder tabFolder)
-//    {
-//        formLayout = new FormLayout();
-//        formLayout.marginHeight = 5;
-//        formLayout.marginWidth = 5;
-//
-//        replace = new TabItem(tabFolder, SWT.NONE);
-//        replace.setText("替换字符");
-//
-//        Composite composite = new Composite(tabFolder, SWT.NONE);
-//
-//        GridLayout gridLayout = new GridLayout();
-//        gridLayout.numColumns = 1;
-//        composite.setLayout(gridLayout);
-//
-//        RowLayout rowLayout = new RowLayout();
-//        rowLayout.type = SWT.HORIZONTAL;// 设置水平填充
-//        rowLayout.marginLeft = 5;// 左补白
-//        rowLayout.marginTop = 5;// 上补白
-//        rowLayout.marginRight = 5;// 右补白
-//        rowLayout.marginBottom = 5;// 下补白
-//        rowLayout.spacing = 5;// 控件的间隙
-//
-//        Composite composite1 = new Composite(composite, SWT.NONE);
-//        composite1.setLayout(rowLayout);
-//
-//        label1 = new Label(composite1, SWT.CENTER);
-//        label1.setText("替换文件名中的：");
-//        text1 = new Text(composite1, SWT.SINGLE | SWT.BORDER);
-//
-//        Composite composite2 = new Composite(composite, SWT.NONE);
-//        composite2.setLayout(rowLayout);
-//        label2 = new Label(composite2, SWT.CENTER);
-//        label2.setText("为：");
-//        text2 = new Text(composite2, SWT.SINGLE | SWT.BORDER);
-//
-//        replace.setControl(composite);
-//    }
+    public void setText1(Text text1)
+    {
+        this.text1 = text1;
+    }
+
+    public Text getText2()
+    {
+        return text2;
+    }
+
+    public void setText2(Text text2)
+    {
+        this.text2 = text2;
+    }
 }
