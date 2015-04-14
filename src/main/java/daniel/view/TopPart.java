@@ -38,11 +38,6 @@ public class TopPart
         return functionButtons.getExecute();
     }
 
-//    public TabFolder gettabTabFolder()
-//    {
-//        return functionTab.getTabFolder();
-//    }
-
     public FunctionTab getFunctionTab()
     {
         return functionTab;

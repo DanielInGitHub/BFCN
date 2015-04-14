@@ -52,6 +52,41 @@ public class RightPart
                 fileTable.changeColumns(columnDatas);
             }
         });
+
+        execute.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                TabItem item = tabFolder.getSelection()[0];
+
+                java.util.List<File> files = fileTable.getCheckedFiles();
+
+                SuperTab superTab = functionTab.getTab(item.getText());
+                ColumnData[] columnDatas = superTab.execute(files);
+
+                ChangeFile changeFile = null;
+//                ColumnData newFiles = null;
+                for (ColumnData columnData : columnDatas)
+                    if (columnData.getColumnName().equals("新文件名")) {
+                        //这里表明改的是文件名
+                        changeFile = new ChangeFile(files, columnData.getList(), true);
+//                        ColumnData[] tmp = changeFile.execute();
+                        columnDatas = new ColumnData[]{columnData, changeFile.execute()};
+//                        newFiles = tmp[1];
+                    } else if (columnData.getColumnName().equals("后缀")) {
+                        //表明改后缀
+                        changeFile = new ChangeFile(files, columnData.getList(), false);
+//                        ColumnData[] tmp = changeFile.execute();
+                        columnDatas = new ColumnData[]{columnData, changeFile.execute()};
+//                        newFiles = tmp[1];
+                    }
+
+                fileTable.changeColumns(columnDatas);
+                fileTable.refreshItems();
+//                fileTable.defaultTableShow();
+            }
+        });
     }
 
 //    public java.util.List<File> convertMaptoFileList(Map<Integer, File> map)

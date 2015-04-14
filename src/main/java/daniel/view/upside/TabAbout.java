@@ -2,9 +2,13 @@ package daniel.view.upside;
 
 import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.List;
 
@@ -41,8 +45,18 @@ public class TabAbout extends SuperTab
     {
         label1 = new Label(firstLine, SWT.CENTER);
         label1.setText("作者：Daniel Chiu");
-        text1 = new Text(firstLine, SWT.MULTI);
-        text1.setText("开源地址：https://github.com/DanielInGitHub/BFCN");
+//        text1 = new Text(firstLine, SWT.MULTI);
+        Link link = new Link(firstLine, SWT.NONE);
+        link.setText("<a href=\"https://github.com/DanielInGitHub/BFCN\">开源地址</a>");
+        link.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                Program.launch("https://github.com/DanielInGitHub/BFCN");
+            }
+        });
+//        text1.setText("开源地址：https://github.com/DanielInGitHub/BFCN");
     }
 
     @Override

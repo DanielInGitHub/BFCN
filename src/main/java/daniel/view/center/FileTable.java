@@ -40,7 +40,7 @@ public class FileTable
      * folders文件夹里的所有文件都可以显示在表格里，所以可以同时指定多个文件夹
      * 在这里直接进行初始化是因为如果没有给定文件夹表格只是不显示内容而不至于出错
      */
-    private List<File> files;
+    private List<File> folders;
     private List<Integer> indexes = new ArrayList<Integer>();
 
     /**
@@ -48,12 +48,12 @@ public class FileTable
      */
     private ColumnData[] columnDatas;
 
-    public FileTable(Composite composite, int style, ColumnData[] columnDatas, List<File> files) throws NeedFolderException
+    public FileTable(Composite composite, int style, ColumnData[] columnDatas, List<File> folders) throws NeedFolderException
     {
         setLayout(composite, style);
 
         this.columnDatas = columnDatas;
-        this.files = files;
+        this.folders = folders;
 
         setTableHeaders();
 
@@ -123,6 +123,11 @@ public class FileTable
      */
     private void setTableItems()
     {
+        List<File> files = new ArrayList<File>();
+        if (folders != null)
+            for (File folder : folders)
+                files.addAll(DiskDetect.getChildFiles(folder));
+
         if (columnDatas != null) {
             //将columnDatas的每列list数据转换成二维数组
             String[][] tmp = new String[columnDatas[0].getList().size()][columnDatas.length];
@@ -151,13 +156,27 @@ public class FileTable
     }
 
     /**
+     * 当更改了表格中显示的文件后，必须刷新这些文件（因为跟TableItem绑定的File已经过期），
+     * 不然会出现第二次更改失效的问题
+     */
+    public void refreshItems()
+    {
+        List<File> files = new ArrayList<File>();
+        for (File folder : folders)
+            files.addAll(DiskDetect.getChildFiles(folder));
+        TableItem[] tableItems = table.getItems();
+        for (int i = 0; i < files.size(); i++)
+            tableItems[i].setData(files.get(i));
+    }
+
+    /**
      * 获得此时表格显示的所有文件
      *
      * @return
      */
-    public List<File> getFiles()
+    public List<File> getFolders()
     {
-        return this.files;
+        return this.folders;
     }
 
     /**
@@ -196,13 +215,15 @@ public class FileTable
             if (index != -1)
                 //如果操作的是所有行
                 if (indexes.size() == tableItems.length)
-//                    if (columnData.getIndexes() == null)
                     for (int i = 0; i < tableItems.length; i++)
                         tableItems[i].setText(index, list.get(i));
                 else {
                     //这个的目的在于。如果预览的时候更改了选择的个数，必须在现实预览或者结果之前将之前的结果清空
-                    for (int i = 0; i < tableItems.length; i++)
+                    for (int i = 0; i < tableItems.length; i++) {
                         tableItems[i].setText(index, "");
+//                        if (columnData.getColumnName().equals("新文件"))
+//                            tableItems[i].setData();
+                    }
                     int j = 0;
                     for (int i : indexes) {
                         //i表示的是表中哪一项需要更改，index表示那一列需要更改，j表示从list中一个个拿出数据拿出
@@ -223,11 +244,11 @@ public class FileTable
      * 如果要更改表格的整个内容（包括列）使用这个方法
      *
      * @param columnDatas
-     * @param files
+     * @param folders
      */
-    public void changeTableContent(ColumnData[] columnDatas, List<File> files)
+    public void changeTableContent(ColumnData[] columnDatas, List<File> folders)
     {
-        this.files = files;
+        this.folders = folders;
         this.columnDatas = columnDatas;
         table.removeAll();
         setTableItems();
@@ -246,7 +267,7 @@ public class FileTable
         for (File file : folders)
             childFiles.addAll(DiskDetect.getChildFiles(file));
 
-        this.files = childFiles;
+        this.folders = folders;
         //表格表头
         String[] tableHeaders = {"原文件名", "新文件名", "后缀", "状态"};
         try {

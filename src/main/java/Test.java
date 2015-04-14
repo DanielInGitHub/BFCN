@@ -1,3 +1,4 @@
+import daniel.Business.ChangeFile;
 import daniel.controller.DiskDetect;
 import daniel.controller.IconDetect;
 import daniel.exception.NeedFolderException;
@@ -7,6 +8,8 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ import java.util.List;
  */
 public class Test
 {
-    public static void main(String[] args) throws FileNotFoundException
+    public static void main(String[] args) throws IOException
     {
         /*1*/
 //        System.out.println(System.getProperty("user.home"));
@@ -44,5 +47,22 @@ public class Test
 //        BufferedImage bufferedImage2 = ImageConvertor.transferAlpha(imageIcon);
 //        System.out.println(bufferedImage);
 //        System.out.println(bufferedImage2);
+        /*5*/
+//        File file = new File("D:\\测试\\坚信 - 副本 (22)测试.txt");
+//        System.out.println(file.getAbsolutePath());
+//        System.out.println(file.getCanonicalPath());
+//        System.out.println(file.getPath());
+//        System.out.println(file.getParent());
+//        List<File> files = DiskDetect.getChildFiles(file);
+//        List<String> stringlist = new ArrayList<String>();
+//        for (int i = 0; i < files.size(); i++) {
+//            stringlist.add("ceshi");
+//        }
+//        ChangeFile changeFile = new ChangeFile(files, stringlist, true);
+//        changeFile.execute();
+        /*6*/
+        File file = new File("D:\\测试\\坚信 - 副本 (22)测试.txt");
+        File newFile = new File("D:\\测试\\坚信 - 副本 (22)测试.ini");
+        file.renameTo(newFile);
     }
 }

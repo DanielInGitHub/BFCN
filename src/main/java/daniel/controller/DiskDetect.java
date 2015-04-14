@@ -167,9 +167,7 @@ public class DiskDetect
      */
     public static boolean checkFolder(File file)
     {
-        if (file.isDirectory() && file.canExecute())
-            return true;
-        else return false;
+        return file.isDirectory() && file.canExecute();
     }
 
 
