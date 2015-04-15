@@ -4,19 +4,27 @@ import daniel.controller.DiskDetect;
 import daniel.exception.NeedFolderException;
 
 import java.io.File;
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类主要是在原文件名的基础上添加序号。添加的序号有很多种方式:
+ * 1）在源文件的开头添加序号（中间可以增加一些分隔符 eg . _etc）
+ * 2）在源文件的结尾处添加序号（中间可以增加一些分隔符 eg . _etc）
+ * 3）舍弃原文件名，以全新的方式添加序号
  * Created by daniel chiu on 2015/4/13.
  */
 public class AddNumbers
 {
+    /*需要更改文件名的文件序列*/
     private List<File> files;
+    /*添加序号的格式*/
     private String format;
+    /*从哪个序号开始*/
     private int startNumber;
+    /*是否自定义零的个数*/
     private boolean DIYZero;
+    /*如果是自定义零的个数，指定需要添加的零的个数*/
     private int zeroNumber;
 
     public AddNumbers(List<File> files, String format, int startNumber, boolean DIYZero)
@@ -177,7 +185,12 @@ public class AddNumbers
         return strings;
     }
 
-    public String zeroNumber()
+    /**
+     * 按要求生成指定个零
+     *
+     * @return
+     */
+    private String zeroNumber()
     {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < zeroNumber; i++)

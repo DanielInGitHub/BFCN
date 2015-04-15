@@ -8,14 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类主要是对原有的文件名删除字符串
+ * 1）要么指定删除某个字符串
+ * 2）要么删除从某位置开始某长度的字符串
  * Created by daniel chiu on 2015/4/13.
  */
 public class DeleteChars
 {
+    /*需要更改文件名的文件序列*/
     private List<File> files;
+    /*需要删除的字符串*/
     private String rule;
+    /*从start位置开始删除字符串*/
     private int start;
+    /*删除指定长度的字符串*/
     private int length;
+    /*是否将开始位置倒着数*/
     private boolean reverse;
 
     public DeleteChars(List<File> files, String rule)
@@ -82,6 +90,13 @@ public class DeleteChars
         return buffer;
     }
 
+    /**
+     * 删除指定的字符串
+     *
+     * @param file
+     * @param rule
+     * @return
+     */
     private StringBuffer deleteSpecificChars(File file, String rule)
     {
         StringBuffer buffer = new StringBuffer();

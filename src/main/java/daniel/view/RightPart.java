@@ -1,8 +1,6 @@
 package daniel.view;
 
 import daniel.Business.*;
-import daniel.controller.StatesChecker;
-//import daniel.view.center.ColumnData_1;
 import daniel.view.center.ColumnData;
 import daniel.view.center.FileTable;
 import daniel.view.upside.FunctionTab;
@@ -14,9 +12,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;
-import java.util.*;
 
 /**
+ * 程序的右半部分，主要是上面的TabFolder和中间的FileTable
  * Created by daniel chiu on 2015/4/12.
  */
 public class RightPart
@@ -43,11 +41,15 @@ public class RightPart
             @Override
             public void widgetSelected(SelectionEvent e)
             {
+                /*获取当前被选中的TabItem*/
                 TabItem item = tabFolder.getSelection()[0];
 
+                /*获取当前FileTable的所有被选中的文件*/
                 java.util.List<File> stringlist = fileTable.getCheckedFiles();
 
+                /*因为TabItem只是我定义的SuperTab的一个子类，所以必须根据特定的TabItem找到我定义的SuperTab，当然这里用到了多态*/
                 SuperTab superTab = functionTab.getTab(item.getText());
+                /*每个SuperTab的子类都实现了execute方法，传递出更改之后的信息*/
                 ColumnData[] columnDatas = superTab.execute(stringlist);
                 fileTable.changeColumns(columnDatas);
             }
@@ -66,25 +68,21 @@ public class RightPart
                 ColumnData[] columnDatas = superTab.execute(files);
 
                 ChangeFile changeFile = null;
-//                ColumnData newFiles = null;
                 for (ColumnData columnData : columnDatas)
                     if (columnData.getColumnName().equals("新文件名")) {
                         //这里表明改的是文件名
                         changeFile = new ChangeFile(files, columnData.getList(), true);
-//                        ColumnData[] tmp = changeFile.execute();
                         columnDatas = new ColumnData[]{columnData, changeFile.execute()};
-//                        newFiles = tmp[1];
                     } else if (columnData.getColumnName().equals("后缀")) {
                         //表明改后缀
                         changeFile = new ChangeFile(files, columnData.getList(), false);
-//                        ColumnData[] tmp = changeFile.execute();
                         columnDatas = new ColumnData[]{columnData, changeFile.execute()};
-//                        newFiles = tmp[1];
                     }
 
                 fileTable.changeColumns(columnDatas);
+                //更改文件名之后一定要刷新FileTable，因为之前每个TableItem绑定的File对象都因为改名之后变得不存在了
+                //所以，如果不刷新，当第二次重新更改的时候就会出现更改不生效的现象
                 fileTable.refreshItems();
-//                fileTable.defaultTableShow();
             }
         });
     }

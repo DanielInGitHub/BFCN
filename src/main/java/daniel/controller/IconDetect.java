@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
+ * 本类也算作是工具类，主要用来对Icon进行操作
  * Created by daniel chiu on 2015/4/8.
  */
 public class IconDetect

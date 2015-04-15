@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类主要是对原有的文件名替换字符串
  * Created by daniel chiu on 2015/4/13.
  */
 public class ReplaceChars
 {
+    /*需要更改文件名的文件序列*/
     private List<File> files;
+    /*需要被替换的字符串*/
     private String original;
+    /*替换的字符串*/
     private String newString;
 
     public ReplaceChars(List<File> files, String original, String newString)

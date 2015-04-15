@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类属于工具类，但也是本程序运行的基础类，用来获取文件，文件夹信息
  * Created by daniel chiu on 2015/4/8.
  */
 public class DiskDetect
@@ -132,6 +133,12 @@ public class DiskDetect
         return strings[0];
     }
 
+    /**
+     * 获得特殊的本地系统的文件夹
+     *
+     * @param folder
+     * @return
+     */
     public static File getSpecialFolder(String folder)
     {
         String result = "";
@@ -169,7 +176,6 @@ public class DiskDetect
     {
         return file.isDirectory() && file.canExecute();
     }
-
 
     public static String SF_ALLUSERSDESKTOP = "AllUsersDesktop";
     public static String SF_ALLUSERSSTARTMENU = "AllUsersStartMenu";

@@ -1,16 +1,19 @@
 package daniel.Business;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类主要是对原有的文件后缀进行更改
  * Created by daniel chiu on 2015/4/13.
  */
 public class ChangeExtension
 {
+    /*新的后缀*/
     private String newExtension;
+    /*后缀是否大写*/
     private boolean capital;
+    /*因为这个是直接修改后缀，所以不需要文件，直接传递文件的个数就可以*/
     private int length;
 
     public ChangeExtension(String newExtension, boolean capital, int length)

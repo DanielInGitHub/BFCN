@@ -39,6 +39,12 @@ public class FunctionTab
         return tabFolder;
     }
 
+    /**
+     * 此处运用多态，有TabItem的名字类获取相应的组件
+     *
+     * @param tabName
+     * @return
+     */
     public SuperTab getTab(String tabName)
     {
         if (tabName != null && !tabName.equals("")) {

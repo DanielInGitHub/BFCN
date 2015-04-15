@@ -13,6 +13,7 @@ import java.util.List;
 
 
 /**
+ * TabItem的布局信息在这里默认都指定好了，如果需要重新修改信息，只需要在子类中重新指定即可
  * Created by daniel chiu on 2015/4/12.
  */
 public abstract class SuperTab
@@ -47,7 +48,7 @@ public abstract class SuperTab
     protected abstract void setSecondLine();
 
 
-//    /**
+    //    /**
 //     * 按照从上到下的顺序依次输出输入框的内容
 //     *
 //     * @return

@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 本类是用来显示文件信息的表格。
+ * 这可能是修改次数最多的组件。可能达十几次
+ * 做一个软件运行起来比较容易，但是做一个结构精良的组件却着实不易
+ * <p>
+ * 为了解耦和，将列的生成逻辑移到外部，Table就只是用来展示的。
  * Created by daniel chiu on 2015/4/10.
  */
 public class FileTable
@@ -219,11 +224,9 @@ public class FileTable
                         tableItems[i].setText(index, list.get(i));
                 else {
                     //这个的目的在于。如果预览的时候更改了选择的个数，必须在现实预览或者结果之前将之前的结果清空
-                    for (int i = 0; i < tableItems.length; i++) {
+                    for (int i = 0; i < tableItems.length; i++)
                         tableItems[i].setText(index, "");
-//                        if (columnData.getColumnName().equals("新文件"))
-//                            tableItems[i].setData();
-                    }
+
                     int j = 0;
                     for (int i : indexes) {
                         //i表示的是表中哪一项需要更改，index表示那一列需要更改，j表示从list中一个个拿出数据拿出

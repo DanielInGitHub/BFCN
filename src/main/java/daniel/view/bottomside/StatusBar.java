@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 /**
+ * 状态栏的布局。本来还想做的更像Windows本地应用的状态栏，但是实际发现其实根本没需要
  * Created by daniel chiu on 2015/4/9.
  */
 public class StatusBar
@@ -28,8 +29,8 @@ public class StatusBar
         layout.marginLeft = layout.marginTop = 0; // 无边距
         statusbar.setLayout(layout);
         // 创建一个用于显示文字的标签
-        statusbarLabel = new Label(statusbar, SWT.CENTER);
-        statusbarLabel.setLayoutData(new RowData(300, -1));
+        statusbarLabel = new Label(statusbar, SWT.LEFT_TO_RIGHT);
+        statusbarLabel.setLayoutData(new RowData(500, -1));
         statusbarLabel.setText("就绪");
     }
 

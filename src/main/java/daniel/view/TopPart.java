@@ -4,14 +4,11 @@ import daniel.view.upside.FunctionButtons;
 import daniel.view.upside.FunctionTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
 /**
+ * 上半部分主要有FunctionTab和FunctionButtons组成
  * Created by daniel chiu on 2015/4/12.
  */
 public class TopPart

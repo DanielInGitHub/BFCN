@@ -1,8 +1,5 @@
 package daniel.view;
 
-import daniel.controller.DiskDetect;
-import daniel.exception.NeedFolderException;
-import daniel.view.center.ColumnData;
 import daniel.view.center.FileTable;
 import daniel.view.leftside.FolderTree;
 import org.eclipse.swt.SWT;
@@ -20,12 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 本类对除下部状态栏之外的布局进行设置
  * Created by daniel chiu on 2015/4/12.
  */
 public class MainWindow
 {
+    /*左半部分*/
     private static LeftPart leftPart;
+    /*右半部分*/
     private static RightPart rightPart;
+    /*左右两部分用分割窗分开，默认3:7的比例*/
     private static SashForm sashForm;
 
     public MainWindow(Composite composite)
@@ -60,7 +61,7 @@ public class MainWindow
                     String folderPath = (String) item.getData();
                     folders.add(new File(folderPath));
                 }
-
+                /*更改FileTable的内容*/
                 fileTable.defaultTableShow(folders);
             }
         });

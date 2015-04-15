@@ -1,10 +1,11 @@
 package daniel.view.center;
 
-import org.eclipse.swt.graphics.Image;
-
 import java.util.List;
 
 /**
+ * 这是FileTabLe的一列
+ * 里面存储了该列的表头信息，和该列需要显示的数据
+ * 这个类的存在主要是为了解耦和。因为不想将列的生成逻辑也放在FileTable内部所以只有独立出来
  * Created by daniel chiu on 2015/4/13.
  */
 public class ColumnData
@@ -15,9 +16,6 @@ public class ColumnData
     //一列的数据
     private List<String> list;
 
-    //默认不用定义此项，但是如果此项被赋值，则表示折现索引代表的行不用变换
-//    private List<Integer> indexes;
-
     public ColumnData()
     {
     }
@@ -27,13 +25,6 @@ public class ColumnData
         this.columnName = columnName;
         this.list = list;
     }
-
-//    public ColumnData(String columnName, List<String> list, List<Integer> indexes)
-//    {
-//        this.columnName = columnName;
-//        this.list = list;
-////        this.indexes = indexes;
-//    }
 
     public String getColumnName()
     {
@@ -55,13 +46,4 @@ public class ColumnData
         this.list = list;
     }
 
-//    public List<Integer> getIndexes()
-//    {
-//        return indexes;
-//    }
-//
-//    public void setIndexes(List<Integer> indexes)
-//    {
-//        this.indexes = indexes;
-//    }
 }

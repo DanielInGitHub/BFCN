@@ -1,19 +1,15 @@
 package daniel.view;
 
 import daniel.controller.DiskDetect;
-import daniel.view.bottomside.StatusBar;
 import daniel.view.leftside.FolderTree;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
 import java.io.File;
 import java.util.List;
 
 /**
+ * 做本部分只有一个目录树，本来还打算再做几个控件上去，但是看起来没有需要，就没有添加
  * Created by daniel chiu on 2015/4/10.
  */
 public class LeftPart

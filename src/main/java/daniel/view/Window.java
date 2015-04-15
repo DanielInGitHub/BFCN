@@ -1,13 +1,12 @@
 package daniel.view;
 
 import daniel.view.bottomside.StatusBar;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
+ * 本程序的入口，基本的整个程序框架都是在这里指定的
  * Created by daniel chiu on 2015/4/8.
  */
 public class Window
