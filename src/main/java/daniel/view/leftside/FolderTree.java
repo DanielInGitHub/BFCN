@@ -1,13 +1,11 @@
 package daniel.view.leftside;
 
-import daniel.controller.DiskDetect;
-import daniel.controller.IconDetect;
+import daniel.util.DiskDetect;
+import daniel.util.IconDetect;
 import daniel.exception.FolderUnreachableException;
 import daniel.view.bottomside.StatusBar;
-import daniel.view.util.ImageFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.widgets.Composite;

@@ -1,6 +1,6 @@
 package daniel.Business;
 
-import daniel.controller.DiskDetect;
+import daniel.util.DiskDetect;
 import daniel.exception.NeedFolderException;
 
 import java.io.File;

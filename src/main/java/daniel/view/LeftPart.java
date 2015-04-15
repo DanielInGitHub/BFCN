@@ -1,6 +1,6 @@
 package daniel.view;
 
-import daniel.controller.DiskDetect;
+import daniel.util.DiskDetect;
 import daniel.view.leftside.FolderTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

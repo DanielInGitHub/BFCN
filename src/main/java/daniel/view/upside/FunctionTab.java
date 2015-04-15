@@ -54,26 +54,10 @@ public class FunctionTab
             if (tabName.equals("添加字符")) return add;
             if (tabName.equals("替换字符")) return replace;
             if (tabName.equals("更改拓展名")) return extension;
+            if (tabName.equals("关于")) return about;
         }
         return null;
     }
-//    /**
-//     * 此处应用多态获取其子类所有的输入框
-//     *
-//     * @param tabName
-//     * @return
-//     */
-//    public String[] getTexts(String tabName)
-//    {
-//        if (tabName != null && !tabName.equals(""))
-//            if (tabName.equals("删除字符"))
-//                return delete.getTexts();
-//        if (tabName.equals("添加序号")) return addNumber.getTexts();
-//        if (tabName.equals("添加字符")) return add.getTexts();
-//        if (tabName.equals("替换字符")) return replace.getTexts();
-//        if (tabName.equals("更改拓展名")) return extension.getTexts();
-//        else return null;
-//    }
 
     public TabDelete getDelete()
     {

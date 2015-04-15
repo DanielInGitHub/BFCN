@@ -1,7 +1,7 @@
 package daniel.view.center;
 
-import daniel.controller.DiskDetect;
-import daniel.controller.IconDetect;
+import daniel.util.DiskDetect;
+import daniel.util.IconDetect;
 import daniel.exception.NeedFolderException;
 import daniel.view.bottomside.StatusBar;
 import org.eclipse.swt.SWT;
@@ -14,9 +14,7 @@ import org.eclipse.swt.widgets.*;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 本类是用来显示文件信息的表格。

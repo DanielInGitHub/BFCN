@@ -1,6 +1,6 @@
 package daniel.view;
 
-import daniel.controller.DiskDetect;
+import daniel.util.DiskDetect;
 import daniel.exception.NeedFolderException;
 import daniel.view.center.FileTable;
 import org.eclipse.swt.SWT;

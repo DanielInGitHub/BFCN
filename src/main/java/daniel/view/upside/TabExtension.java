@@ -1,14 +1,10 @@
 package daniel.view.upside;
 
 import daniel.Business.ChangeExtension;
-import daniel.controller.StatesChecker;
 import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;

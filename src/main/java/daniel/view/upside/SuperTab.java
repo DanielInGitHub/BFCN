@@ -48,10 +48,5 @@ public abstract class SuperTab
     protected abstract void setSecondLine();
 
 
-    //    /**
-//     * 按照从上到下的顺序依次输出输入框的内容
-//     *
-//     * @return
-//     */
     public abstract ColumnData[] execute(List<File> fileList);
 }

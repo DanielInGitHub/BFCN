@@ -1,4 +1,4 @@
-package daniel.controller;
+package daniel.util;
 
 import daniel.exception.FolderUnreachableException;
 import daniel.exception.NeedFolderException;

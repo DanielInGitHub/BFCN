@@ -1,7 +1,7 @@
 package daniel.view.upside;
 
 import daniel.Business.AddNumbers;
-import daniel.controller.StatesChecker;
+import daniel.util.StatesChecker;
 import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

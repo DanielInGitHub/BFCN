@@ -1,4 +1,4 @@
-package daniel.controller;
+package daniel.util;
 
 import java.util.*;
 

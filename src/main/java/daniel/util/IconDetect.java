@@ -1,4 +1,4 @@
-package daniel.controller;
+package daniel.util;
 
 import daniel.view.util.ImageConvertor;
 import org.eclipse.swt.graphics.Image;
@@ -13,7 +13,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.io.File;
 import java.io.FileNotFoundException;

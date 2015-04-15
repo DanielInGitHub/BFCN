@@ -1,16 +1,13 @@
 package daniel.view.upside;
 
 import daniel.Business.AddChars;
-import daniel.controller.StatesChecker;
+import daniel.util.StatesChecker;
 import daniel.view.center.ColumnData;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;
-import java.util.*;
 
 /**
  * Created by daniel chiu on 2015/4/12.
